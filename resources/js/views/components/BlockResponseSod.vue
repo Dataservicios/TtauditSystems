@@ -56,8 +56,10 @@
         },
         mounted(){
             EventBus.$on('loadResponseSod', (item) => {
+                this.dataPolls=[];
+                this.dataLoad=[];
                 this.dataLoad=item;
-                //console.log(this.dataLoad,this.dataLoad[0].company_id);
+                //console.log(this.dataLoad,this.dataLoad[0].store_id);
                 this.getResponsesPoll();
             });
         },
@@ -137,6 +139,7 @@
                 })
                 .then((response) => {
                     this.isLoading2 = false;
+                    this.dataPolls = [];
                     this.dataPolls = response.data;
                     //console.log('objetoTotal',this.dataPolls);
 

@@ -174,6 +174,13 @@
                     this.mensaje="Datos guardandose un momento por favor ...";this.showAlert();
                     this.disabledButton=true;
                     this.saveSod();
+                    if ((this.indice+1)<this.totalNoMedidos)
+                    {
+                        this.indice = this.indice + 1;this.disabledButton = false;
+                    }else{
+                        this.mensaje="Se acabo la medición de esta selección ...";this.showAlert();
+                    }
+                    this.getProducts();
                     /*if ((this.indice+1)<this.totalNoMedidos)
                     {
                         this.indice = this.indice + 1;
@@ -201,12 +208,6 @@
                         }
                         this.totalNoMedidos = this.totalNoMedidos -1;
                         this.porcentNoMedidos = Math.round(this.totalNoMedidos*100/this.totalBase);
-                        if ((this.indice+1)<this.totalNoMedidos)
-                        {
-                            this.indice = this.indice + 1;this.disabledButton = false;
-                        }else{
-                            this.mensaje="Se acabo la medición de esta selección ...";this.showAlert();
-                        }
 
                     })
                     .catch(function (error) {
@@ -254,12 +255,14 @@
             },
             getProducts(){
                 let urlResponse = '/api/getProductsPublicity/' + this.selectedCompany.id + '/' + this.stores_indice[this.indice].publicity_id;
-
+                //console.log('indice: ',this.indice);
+                //console.log('objeto indice: ',this.stores_indice[this.indice]);
                 axios.get(urlResponse)
                     .then((response) => {
                         // handle success
                         this.isLoading2 = false;
                         this.productsPublicities = response.data;
+                        this.valuePolls=[];
                         this.valuePolls.push({store_id:this.stores_indice[this.indice].store_id,company_id:this.selectedCompany.id,publicity_id:this.stores_indice[this.indice].publicity_id});
                         EventBus.$emit('loadResponseSod', this.valuePolls);
                         //console.log(this.valuePolls);
