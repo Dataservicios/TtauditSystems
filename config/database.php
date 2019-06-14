@@ -41,7 +41,7 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '104.154.46.213'),
+            'host' => env('DB_HOST', '104.197.133.79'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'ttaudit_auditors'),
             'username' => env('DB_USERNAME', 'dataser_admin'),

@@ -4,19 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\UserRepo;
+use App\Repositories\ModuleRepo;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Closure;
 
 class UserController extends Controller
 {
     protected $userRepo;
+    protected $moduleRepo;
 
-    public function __construct(UserRepo $userRepo)
+    public function __construct(ModuleRepo $moduleRepo,UserRepo $userRepo)
     {
         // set the model
         //$this->model = new Repository($company);
         $this->userRepo = $userRepo;
+        $this->moduleRepo = $moduleRepo;
+        //$this->middleware('auth');
 
     }
     /**
@@ -112,4 +117,44 @@ class UserController extends Controller
             return $user;
         }
     }
+
+    public function loginUser(Request $request)
+    {
+        $valoresPost= $request->all();
+        $email = $valoresPost['email'];
+        $password = $valoresPost['password'];
+        $objUser = $this->userRepo->getModel();
+        if ($user = $objUser::whereEmail($email)->first())
+        {
+            //dd($password,$user->modules);
+            if (Hash::check($password,$user->password))
+            {
+                //dd('user: ',$user,'modules: ',$user->modules,'roles: ',$user->roles);
+                if (count($user->roles)>0)
+                {
+                    if ($user->roles[0]->id==1)
+                    {
+                        //dd('user: ',$user,'modules: ',$user->modules,'roles: ',$user->roles);
+                        $obj_modules1 = $this->moduleRepo->getModel();
+                        $obj_modules = $obj_modules1->orderBy('orden','ASC')->get();
+                        $responses =['message' => 'Bienvenid@ '.$user->fullname,'api_token' => $user->api_token,'obj_user' => $user,'obj_modules' => $obj_modules,'obj_roles' => $user->roles];
+                    }else{
+                        $responses =['message' => 'Bienvenid@ '.$user->fullname,'api_token' => $user->api_token,'obj_user' => $user,'obj_modules' => $user->modules,'obj_roles' => $user->roles];
+                    }
+                }else{
+                    $responses =['message' => 'Bienvenid@ '.$user->fullname,'api_token' => $user->api_token,'obj_user' => $user,'obj_modules' => $user->modules,'obj_roles' => $user->roles];
+                }
+                
+            }else{
+                $responses = ['message' => 'Tu password no concuerdan con nuestros registros','api_token' => null,'obj_user' => [],'obj_modules' => [],'obj_roles' => []];
+            }
+        }else{
+            $responses = ['message' => 'Tus email no concuerdan con nuestros registros','api_token' => null,'obj_user' => [],'obj_modules' => [],'obj_roles' => []];
+        }
+        
+
+        return $responses;
+    }
+
+    
 }

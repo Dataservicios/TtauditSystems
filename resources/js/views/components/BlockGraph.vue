@@ -289,7 +289,7 @@
                             /*for (var indice in this.datos) {
                                 console.log("opcion: '" + this.datos[indice]['opcion'] + "' valor: " + this.datos[indice]['valor']);
                             }*/
-                            //console.log(this.datos);
+                            console.log('datos bar: ',this.datos);
                             this.createdBar();
                         }
 
@@ -316,7 +316,7 @@
                 }//console.log(this.leyendasDonouts);
                 let chart = am4core.create(this.$refs.chartDonout, am4charts.PieChart3D);
 
-                chart.data = this.datos;
+                chart.data = this.datos;console.log(this.datos);
                 chart.exporting.menu = new am4core.ExportMenu();
                 chart.numberFormatter.outputFormat = "#.";
 
@@ -325,6 +325,31 @@
                 pieSeries.dataFields.value = "cantidad";
                 pieSeries.dataFields.category = "SiNo";
                 pieSeries.labels.template.text = "{value.percent.formatNumber('#.')} %";
+
+                chart.legend = new am4charts.Legend();
+                chart.legend.position="right";
+                chart.exporting.menu.items = [
+                    {
+                        "label": "...",
+                        "menu": [
+                            {
+                                "label": "Image",
+                                "menu": [
+                                    { "type": "png", "label": "PNG" },
+                                    { "type": "jpg", "label": "JPG" },
+                                    { "type": "pdf", "label": "PDF" }
+                                ]
+                            }, {
+                                "label": "Data",
+                                "menu": [
+                                    { "type": "xlsx", "label": "XLSX" }
+                                ]
+                            }, {
+                                "label": "Print", "type": "print"
+                            }
+                        ]
+                    }
+                ];
                 this.datos=[];
             },
             createdBar(){
@@ -373,6 +398,34 @@
                 //series1.calculateTotals = true;
                 series1.stacked = true;
 
+                var labelBullet = series1.bullets.push(new am4charts.LabelBullet());
+                labelBullet.label.text = "[bold]{porcen.formatNumber('#.')} %[/]";
+                labelBullet.label.dy = -5;
+                labelBullet.label.hideOversized = false;
+                labelBullet.label.fontSize = 10;
+
+                chart.exporting.menu.items = [
+                    {
+                        "label": "...",
+                        "menu": [
+                            {
+                                "label": "Image",
+                                "menu": [
+                                    { "type": "png", "label": "PNG" },
+                                    { "type": "jpg", "label": "JPG" },
+                                    { "type": "pdf", "label": "PDF" }
+                                ]
+                            }, {
+                                "label": "Data",
+                                "menu": [
+                                    { "type": "xlsx", "label": "XLSX" }
+                                ]
+                            }, {
+                                "label": "Print", "type": "print"
+                            }
+                        ]
+                    }
+                ];
 
                 //
                 this.datos=[];

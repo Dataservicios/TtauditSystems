@@ -25,6 +25,8 @@ Route::resource('companies', 'CompanyController');
 
 Route::get('getGraphStores/{company_id}', 'CompanyStoreController@getGraphStores');
 Route::get('getUbigeosForCampaigne/{company_id}', 'CompanyStoreController@getUbigeosForCampaigne');
+Route::get('getOfficeForCampaigne/{company_id}', 'ExchangeController@getOfficeForCampaigne');
+Route::get('getOfficeForCampaigneWithInconsistency/{company_id}', 'InconsistencyController@getOfficeForCampaigne');
 
 Route::get('getCategoryPoll/{company_id}/{audit_id}', 'PollController@getCategoryForCompanyAudit');
 Route::get('getPollsForCategory/{category_id}/{company_audit_id}', 'PollController@getPollsForCategory');
@@ -44,3 +46,22 @@ Route::post('getQuestionForSod', ['as' => 'getQuestionForSod', 'uses' => 'PollCo
 Route::post('changeResponseSiNo', 'PollDetailsController@changeSiNo');
 Route::post('insertPollOptionDetail', 'PollOptionDetailsController@insertOption');
 Route::post('deletePollOptionDetail', 'PollOptionDetailsController@deleteOption');
+Route::post('updatedPollOptionDetail', 'PollOptionDetailsController@updateOptions');
+Route::get('getResultsVerifyForCompanyId/{company_id}/{ubigeo?}', 'ExchangeController@getResultsVerifyForCompany');
+Route::post('insertPhotoError', ['as' => 'insertPhotoError', 'uses' => 'LogController@insertBadPictureTaken']);
+Route::post('getProcessingOsa', ['as' => 'getProcessingOsa', 'uses' => 'PollDetailsController@getProcessingOsa']);
+Route::post('getFiltersOsa', ['as' => 'getFiltersOsa', 'uses' => 'PollDetailsController@getFilterOsaAll']);
+Route::post('getFiltersProductsOsa', ['as' => 'getFiltersProductsOsa', 'uses' => 'PollDetailsController@getFiltersProductsOsaAll']);
+Route::post('getEffectivePointsOsa', ['as' => 'getEffectivePointsOsa', 'uses' => 'PollDetailsController@getEffectivePointsOsa']);
+Route::post('getCalculateGraphOsa', ['as' => 'getCalculateGraphOsa', 'uses' => 'PollDetailsController@calculateOsaOosVoid']);
+Route::post('getValuesOsaCategoriesProducts', ['as' => 'getValuesOsaCategoriesProducts', 'uses' => 'PollDetailsController@getValuesOsaCategoriesProducts']);
+Route::post('getValuesOsaProductsCategories', ['as' => 'getValuesOsaProductsCategories', 'uses' => 'PollDetailsController@getValuesOsaProductsCategories']);
+Route::post('getValuesOsaRanking1', ['as' => 'getValuesOsaRanking1', 'uses' => 'PollDetailsController@getValuesOsaRanking1']);
+Route::post('getEvolutivoOsa', ['as' => 'getEvolutivoOsa', 'uses' => 'PollDetailsController@getEvolutivoOsa']);
+Route::post('getVendorsForGroup', ['as' => 'getVendorsForGroup', 'uses' => 'PollDetailsController@getVendorsForGroup']);
+Route::post('getClientsOsa', ['as' => 'getClientsOsa', 'uses' => 'PollDetailsController@getClientsOsa']);
+Route::post('validacionCanjes', ['as' => 'validacionCanjes', 'uses' => 'CanjesController@validacionCanjes']);
+Route::post('getVersions', ['as' => 'getVersions', 'uses' => 'VersionController@versionsForVigent']);
+Route::post('getDexOsa', ['as' => 'getDexOsa', 'uses' => 'PollDetailsController@getDexOsa']);
+Route::post('loginUser', ['as' => 'loginUser', 'uses' => 'UserController@loginUser']);
+Route::post('scalaCanjes', ['as' => 'scalaCanjes', 'uses' => 'CanjesController@scalasCanjes']);

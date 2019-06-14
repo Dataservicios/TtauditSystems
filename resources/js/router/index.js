@@ -14,6 +14,11 @@ import PanelLucky from '../views/PanelLucky'
 import DisplayCampaigne from '../views/DisplayCampaigne'
 import LoginInit from '../views/LoginInit'
 import Charts from '../views/Charts'
+import OsaAlicorp from '../views/OsaAlicorp'
+import PruebasVue from '../views/PruebasVue'
+import LuckyInconsistency from '../views/LuckyInconsistency'
+import PanelValidacionCanjes from '../views/PanelValidacionCanjes'
+import PanelAdmin from '../views/PanelAdmin'
 //import Widgets from '../views/Widgets'
 
 // Views - Components
@@ -106,14 +111,75 @@ export default new Router({
             ]
         },
         {
-            path: '/displayCampaigne',
-            name: 'Campaigne',
+            path: '/panelValidacionCanjes',
+            name: 'ValidacionCanjes',
             component: Full,
             children: [
                 {
-                    path: '/displayCampaigne',
+                    path: '/panelValidacionCanjes',
+                    name: 'PanelValidacionCanjes',
+                    component: PanelValidacionCanjes
+                }
+            ]
+        },
+        {
+            path: '/panelAdmin',
+            name: 'PanelAdmin',
+            component: Full,
+            children: [
+                {
+                    path: '/panelAdmin',
+                    name: 'PanelAdmin',
+                    component: PanelAdmin
+                }
+            ]
+        },
+        {
+            path: '/pruebas_admin',
+            name: 'PruebasVue',
+            component: Full,
+            children: [
+                {
+                    path: '/pruebas_admin',
+                    name: 'PruebasVue',
+                    component: PruebasVue
+                }
+            ]
+        },
+        {
+            path: '/home/:identify',
+            name: 'Administrator',
+            component: Full,
+            children: [
+                {
+                    path: '/home/:identify',
                     name: 'DisplayCampaigne',
-                    component: DisplayCampaigne
+                    component: DisplayCampaigne,
+                    props: true
+                }
+            ]
+        },
+        {
+            path: '/osaDashboard',
+            name: 'Osa',
+            component: Full,
+            children: [
+                {
+                    path: '/osaDashboard',
+                    name: 'OsaAlicorp',
+                    component: OsaAlicorp
+                }
+            ]
+        },
+        {
+            path: '/inconsistencyLucky',
+            name: 'inconsistency',
+            component: Full,
+            children: [
+                {
+                    path: '/inconsistencyLucky',
+                    name: 'LuckyInconsistency',
+                    component: LuckyInconsistency
                 }
             ]
         }

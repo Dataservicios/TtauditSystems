@@ -21,22 +21,22 @@
         </b-nav-item>-->
         <b-nav-item-dropdown right>
           <template slot="button-content">
-            <img src="static/img/avatars/avatar.gif" class="img-avatar" alt="admin@bootstrapmaster.com">
-            <span class="d-md-down-none">Admin</span>
+            <img :src="avatar" class="img-avatar" alt="webmaster@dataservicios.com">
+            <span class="d-md-down-none">{{user_fullname}}</span>
           </template>
           <!--<b-dropdown-header tag="div" class="text-center"><strong>Account</strong></b-dropdown-header>
           <b-dropdown-item><i class="fa fa-bell-o"></i> Updates<span class="badge badge-info">42</span></b-dropdown-item>
           <b-dropdown-item><i class="fa fa-envelope-o"></i> Messages<span class="badge badge-success">42</span></b-dropdown-item>
           <b-dropdown-item><i class="fa fa-tasks"></i> Tasks<span class="badge badge-danger">42</span></b-dropdown-item>
           <b-dropdown-item><i class="fa fa-comments"></i> Comments<span class="badge badge-warning">42</span></b-dropdown-item>-->
-          <b-dropdown-header tag="div" class="text-center"><strong>Settings</strong></b-dropdown-header>
-          <b-dropdown-item><i class="fa fa-user"></i> Profile</b-dropdown-item>
+          <b-dropdown-header tag="div" class="text-center"><strong>Operaciones</strong></b-dropdown-header>
+          <!-- <b-dropdown-item><i class="fa fa-user"></i> Profile</b-dropdown-item> -->
           <!--<b-dropdown-item><i class="fa fa-wrench"></i> Settings</b-dropdown-item>
           <b-dropdown-item><i class="fa fa-usd"></i> Payments<span class="badge badge-default">42</span></b-dropdown-item>
           <b-dropdown-item><i class="fa fa-file"></i> Projects<span class="badge badge-primary">42</span></b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item><i class="fa fa-shield"></i> Lock Account</b-dropdown-item>-->
-          <b-dropdown-item @click="logout"><i class="fa fa-lock"></i> Logout</b-dropdown-item>
+          <b-dropdown-item @click="logout"><i class="fa fa-lock"></i> Salir</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-nav>
       <!--<button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">&#9776;</button>-->
@@ -49,11 +49,22 @@ export default {
   name: 'headertop',
   data(){
     return{
-      user:[]
+      user:[],
+      user_fullname:'',
+      avatar:'',
+
     }
   },
   mounted() {
-      //this.getCampaignes()
+    this.user = JSON.parse(sessionStorage.getItem('user'));
+    this.user_fullname = this.user.fullname;
+    if (this.user.image == null )
+    {
+      this.avatar = "/static/img/avatars/avatar.gif";
+    }else{
+      this.avatar = '/static/img/avatars/' + this.user.image;
+    }
+    //console.log(this.$route.query.page);
   },
   methods: {
     sidebarToggle (e) {
@@ -73,18 +84,25 @@ export default {
       document.body.classList.toggle('aside-menu-hidden')
     },
     logout () {
-        window.location = '/logout';
+        // window.location = '/logout';
+        sessionStorage.removeItem('api_token');
+        sessionStorage.removeItem('api_token');
+        sessionStorage.removeItem('user_id');
+        sessionStorage.removeItem('user_fullname');
+        sessionStorage.removeItem('user_type');
+        sessionStorage.removeItem('user_modules');
+        this.$router.push('/');
     },
     getProfile()
     {
-      let urlCombo = '/api/getProfile/';
-      axios.get(urlCombo)
-          .then((response) => {
-              this.user = response.data
-          })
-          .catch((response) => {
-              console.log('Error', response);
-          })
+      // let urlCombo = '/api/getProfile/';
+      // axios.get(urlCombo)
+      //     .then((response) => {
+      //         this.user = response.data
+      //     })
+      //     .catch((response) => {
+      //         console.log('Error', response);
+      //     })
     }
   }
 }

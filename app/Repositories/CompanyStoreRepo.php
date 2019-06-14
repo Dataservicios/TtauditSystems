@@ -40,6 +40,7 @@ WHERE
         return $results;
     }
 
+
     public function getBaseForCompanyUbigeo($company_id,$ubigeo="0")
     {
         if ($ubigeo=="0")

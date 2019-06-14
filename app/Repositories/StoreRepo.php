@@ -48,7 +48,8 @@ GROUP BY
   `s`.`district`,
   `s`.`region`,
   `s`.`ubigeo`,
-  (case when  `m`.`archivo` is null then ""  else `m`.`archivo` end) as `archivo`,`p`.`comentario`
+  (case when  `m`.`archivo` is null then ""  else `m`.`archivo` end) as `archivo`,`p`.`comentario`,`p`.`created_at`,
+  (case when  `audio`.`archivo` is null then ""  else `audio`.`archivo` end) as `audio_web`
 FROM
   `poll_details` `p`
   LEFT OUTER JOIN (
@@ -59,10 +60,24 @@ FROM
   `medias` `me`
 WHERE
   `me`.`company_id` = '.$company_id.' AND 
-  `me`.`poll_id` = '.$poll_id.'
+  `me`.`poll_id` = '.$poll_id.' and tipo=1
 GROUP BY
   `me`.`store_id`
   ) `m` ON (`p`.`store_id` = `m`.`store_id`)
+  
+  LEFT OUTER JOIN (
+  SELECT
+  `me`.`archivo`,
+  `me`.`store_id`
+FROM
+  `medias` `me`
+WHERE
+  `me`.`company_id` = '.$company_id.' AND
+  `me`.`poll_id` = '.$poll_id.' and tipo=2
+GROUP BY
+  `me`.`store_id`
+  ) `audio` ON (`p`.`store_id` = `audio`.`store_id`)
+  
   LEFT OUTER JOIN `stores` `s` ON (`p`.`store_id` = `s`.`id`)
 WHERE
   `p`.`store_id` IN ('.$store_id.') AND 
@@ -72,7 +87,7 @@ GROUP BY
   s.id,
   s.fullname,
   s.address,`s`.`region`,
-  s.ubigeo,`m`.`archivo`';
+  s.ubigeo,`m`.`archivo`,`p`.`created_at`';
 
         // dd($sql);
         $results = DB::select($sql);

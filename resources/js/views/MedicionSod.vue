@@ -6,7 +6,7 @@
                     <div class="card">
                         <div class="card-header">
                             <button class="btn btn-link" type="button"  v-on:click="verForm = !verForm">
-                                <strong>Filter</strong> Elements  Aplication: Medir Sod Ver. 1.2 beta
+                                <strong>Filter</strong> Elements  Aplication: Medir Sod Ver. {{version}}
                             </button>
 
                         </div>
@@ -48,15 +48,32 @@
                                         <loading :active.sync="isLoading3" :can-cancel="false" :is-full-page="false" :height="20"></loading>
                                     </div>
                                     <label class="col-md-2 col-form-label">Tipo de Sod</label>
-                                    <div class="col-md-6 col-form-label">
-                                        <div class="form-check form-check-inline mr-1">
-                                            <input class="form-check-input" id="inline-radio1" type="radio" v-model="trabajado"  value="Sod Trabajado" name="inline-radios" checked>
-                                            <label class="form-check-label" for="inline-radio1" >Sod Trabajado</label>
+                                    <div class="col-md-2 col-form-label">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-check form-check-inline mr-1">
+                                                    <input class="form-check-input" id="inline-radio1" type="radio" v-model="trabajado"  value="Sod Trabajado" name="inline-radios" checked>
+                                                    <label class="form-check-label" for="inline-radio1" >Sod Trabajado</label>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-check form-check-inline mr-1">
-                                            <input class="form-check-input" id="inline-radio2" type="radio" v-model="trabajado"  value="Sod No Trabajado" name="inline-radios">
-                                            <label class="form-check-label" for="inline-radio2">Sod No Trabajado</label>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-check form-check-inline mr-1">
+                                                    <input class="form-check-input" id="inline-radio2" type="radio" v-model="trabajado"  value="Sod No Trabajado" name="inline-radios">
+                                                    <label class="form-check-label" for="inline-radio2">Sod No Trabajado</label>
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
+
+                                    <label class="col-md-2 col-form-label">Tipo PDV</label>
+                                    <div class="col-md-2">
+                                        <select class="form-control form-control-sm" v-model="tipoPDV" >
+                                            <option value="0">Todos</option>
+                                            <option value="Bodega">Bodega</option>
+                                            <option value="Puesto de Mercado">Puesto de Mercado</option>
+                                        </select>
                                     </div>
                                 </div>
                             <b-alert :show="dismissCountDown"
@@ -153,6 +170,7 @@
             return{
                 verForm:true,
                 tipo:'Sod',
+                tipoPDV:0,
                 dismissSecs: 2,
                 dismissCountDown: 0,
                 mensaje:'',
@@ -174,7 +192,8 @@
                 isLoading3: false,
                 fullPage: false,
                 selectedValues:[],
-                imageRoute:''
+                imageRoute:'',
+                version: '1.3 Beta'
             }
         },
         methods:{
@@ -276,7 +295,7 @@
                                     this.mensaje="No hay Tipo de Sod seleccionado";this.showAlert();
                                 }else{
                                     this.mensaje=0;this.verForm=false;
-                                    this.selectedValues.push({objCompany: this.selectedCompany, ubigeo: this.selectedUbigeo,objAuditor: this.selectedAuditor, objCategory:this.selectedCategory, trabajado:this.trabajado, tipo:this.tipo});
+                                    this.selectedValues.push({objCompany: this.selectedCompany, ubigeo: this.selectedUbigeo,objAuditor: this.selectedAuditor, objCategory:this.selectedCategory, trabajado:this.trabajado, tipo:this.tipo, tipoPDV:this.tipoPDV});
                                     //console.log('selectedValues: ',this.selectedValues);
                                     EventBus.$emit('sendValuesSod', this.selectedValues);
                                 }

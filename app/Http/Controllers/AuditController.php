@@ -103,8 +103,9 @@ class AuditController extends Controller
             case 17:
                 $structMenu[] = array('name'=>'Panel de Control','icon'=>'icon-speedometer','url'=>'/displayCampaigne');
                 $structMenu[] = array('title'=>true,'name'=>'Auditorias');
-                $structMenu[] = array('name'=>'Mistery','url'=>'/panel','icon'=>'icon-drop');
-                $structMenu[] = array('name'=>'Evaluación','url'=>'/panelLucky','icon'=>'icon-drop');
+                $structMenu[] = array('name'=>'Mistery','url'=>'/panel','icon'=>'icon-docs');
+                $structMenu[] = array('name'=>'Evaluación','url'=>'/panelValidacionCanjes','icon'=>'icon-calculator');
+                $structMenu[] = array('name'=>'OSA','url'=>'/osaDashboard','icon'=>'icon-note');
                 break;
             default:
                 $structMenu=[];

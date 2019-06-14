@@ -8,7 +8,7 @@
                             <div class="row align-items-center mt-3">
                                 <div class="col-lg-3 col-sm-3 col-md-3 mb-2 mb-xl-0 text-center">
                                     <button class="btn btn-link" type="button"  v-on:click="verForm = !verForm">
-                                        <strong>Campaigne</strong> Mistery Alicorp
+                                        <strong>Campaigne</strong> Mistery Alicorp Ver. {{version}}
                                     </button>
                                 </div>
                                 <div class="col-lg-3 col-sm-3 col-md-3 mb-2 mb-xl-0 text-center">
@@ -144,6 +144,7 @@
                                 <h5 class="mb-0">
                                     <button class="btn btn-link" type="button" data-toggle="collapse" v-bind:data-target="'#collapse' + poll.id" aria-expanded="true" v-bind:aria-controls="'collapse' + poll.id">
                                         {{poll.questionr}}
+
                                     </button>
                                 </h5>
                             </div>
@@ -167,9 +168,9 @@
             </loading>
 
         </div>-->
-        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;overflow-y: scroll;" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;overflow-y: scroll" aria-hidden="true">
+            <div class="modal-dialog full_modal-dialog" role="document">
+                <div class="modal-content full_modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">{{opcion.opcion}}</h4>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -253,6 +254,7 @@
         data(){
             return{
                 verForm:true,
+                version: '2.0',
                 mensaje:'',
                 base:0,
                 ruteados:0,
@@ -432,7 +434,7 @@
                 axios.get(urlPolls)
                     .then((response) => {
                         this.mensaje = "Loaded questions";
-                        this.polls = response.data;
+                        this.polls = response.data;//console.log('polls',this.polls);
                         this.verForm=false;
                     })
                     .catch((response) => {

@@ -59,7 +59,7 @@ export default {
     }
   },
     mounted(){
-        console.log("Valor: " + this.navItems)
+        //console.log("Valor navItems: " + this.navItems)
     },
   components: {
     SidebarNavDropdown,

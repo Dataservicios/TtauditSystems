@@ -20,6 +20,7 @@ class PollDetailRepo extends Repository
         return new PollDetail;
     }
 
+
     public function getPollDetailsForPollId($poll_id,$ubigeo="0")
     {
         if ($ubigeo == "0")
@@ -65,6 +66,114 @@ WHERE
         }
 
         return $comentario;
+    }
+
+    public function getOsaPolls($study_id,$user_id)
+    {
+        $results = DB::select('call sp_cp_osa_poll_beta(?,?)', [ $study_id,$user_id]);
+        return $results;
+    }
+
+    public function getFilterAllOsa($study_id,$user_id)
+    {
+        $results = DB::select('call sp_cp_osa_filters_beta(?,?,?)', [ $study_id,$user_id,0]);
+        return $results;
+    }
+
+    public function getFiltersProductsOsa($study_id)
+    {
+        $results = DB::select('SELECT
+  `product_detail`.`product_id`,
+  `products`.`fullname` as product,
+  `products`.`category_product_id`,
+  `products`.`eam`,
+  `category_products`.`fullname` as category
+FROM
+  `products`
+  INNER JOIN `category_products` ON (`products`.`category_product_id` = `category_products`.`id`)
+  INNER JOIN `product_detail` ON (`products`.`id` = `product_detail`.`product_id`)
+WHERE
+  `product_detail`.`company_id` in (SELECT
+                                 `companies`.`id`
+                               FROM
+                                 `companies`
+                               WHERE
+                                   `companies`.`study_id` = ?
+                               UNION ALL
+                               SELECT
+                                 239 as "id"
+                               UNION ALL
+                               SELECT
+                                 246 as "id")
+                                 group by `products`.`category_product_id`,`product_detail`.`product_id`', [ $study_id]);
+
+        return $results;
+    }
+
+    public function puntosEfectivosOsa($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0')
+    {
+        $results = DB::select('call sp_cp_osa_count_stores_v1(?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex]);
+        return $results;
+
+    }
+
+    public function calculateDataOsa($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0)
+    {
+        //resumen OSA
+        $results = DB::select('call sp_cp_osa_polloption_beta_v1(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);/**/
+        return $results;
+
+    }
+
+    public function calculateOsaCategories($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0)
+    {
+        $results = DB::select('call sp_cp_osa_category_v1(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);
+        return $results;
+
+    }
+
+    public function calculateOsaProducts($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0)
+    {
+        $results = DB::select('call sp_cp_osa_filter_category_product_v1(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);
+        return $results;
+
+    }
+
+    public function calculateRankingFFVV($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0)
+    {
+        $results = DB::select('call sp_cp_osa_ranking1_v1(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);
+        return $results;
+
+    }
+
+    public function calculateEvolutiveOsa($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0)
+    {
+        //evolutivo OSA
+        $results = DB::select('call sp_cp_osa_evolutivo_v1(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);
+        return $results;
+
+    }
+
+    public function getVendorsOsa($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0,$group)
+    {
+        $results = DB::select('call sp_cp_osa_vendors_v1(?,?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id,$group]);
+        return $results;
+
+    }
+
+    public function getClientsOsa($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0)
+    {
+        //$results = DB::select('call sp_cp_osa_cliente_v1(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);
+        $results = DB::select('call sp_cp_osa_cliente_v2(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);
+        return $results;
+
+    }
+
+    public function getDexOsa($study_id,$user_id,$month='0',$week='0',$office='0',$dex='0',$category_id=0,$product_id=0)
+    {
+        $results = DB::select('call sp_cp_osa_ranking_for_dex(?,?,?,?,?,?,?,?)', [ $study_id,$user_id,$office,$month,$week,$dex,$category_id,$product_id]);
+        return $results;
+
     }
 
 }

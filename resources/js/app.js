@@ -8,6 +8,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import './index_db';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

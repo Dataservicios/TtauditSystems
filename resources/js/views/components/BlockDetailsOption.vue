@@ -1,26 +1,23 @@
 <template>
     <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-        <!--<div class="row">
+        <div class="row">
             <div class="col-sm-12 col-md-6">
-                <div class="dataTables_length" id="DataTables_Table_0_length">
-                    <label>Show
-                        <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0"
-                                class="custom-select custom-select-sm form-control form-control-sm">
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select> entries
-                    </label>
-                </div>
+
             </div>
-            <div class="col-sm-12 col-md-6">
-                <div id="DataTables_Table_0_filter" class="dataTables_filter">
-                    <label>Search:<input type="search" class="form-control form-control-sm" placeholder=""
-                                         aria-controls="DataTables_Table_0"></label>
-                </div>
+            <div class="col-sm-12 col-md-6 text-right">
+                <button class="btn btn-primary" type="button">
+                    <JsonExcel
+                        class   = "fa fa-lightbulb-o"
+                        :data   = "json_data"
+                        :fields = "json_fields"
+                        worksheet = "My Worksheet"
+                        :name    = "nombExcel">
+
+                    </JsonExcel>
+                </button>
+
             </div>
-        </div>-->
+        </div>
         <loading :active.sync="isLoading2" :can-cancel="false" :is-full-page="false" :height="20"></loading>
         <div class="row">
             <div class="col-sm-12">
@@ -37,6 +34,10 @@
                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
                                 colspan="1">
                                 Id
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
+                                colspan="1">
+                                Fecha
                             </th>
                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
                                 colspan="1">Nombres
@@ -56,21 +57,30 @@
                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"
                                 colspan="1" >Comentario
                             </th>
+                            <th>Audio</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr role="row" class="odd" v-for="(storeM,index) in storesMedias" v-if="viewStores">
                             <td class="sorting_1">{{index + 1}}</td>
                             <td>{{storeM.id}}</td>
+                            <td>{{storeM.created_at}}</td>
                             <td>{{storeM.fullname}}</td>
                             <td>{{storeM.region}}</td>
                             <td>{{storeM.district}}</td>
                             <td>{{storeM.ubigeo}}</td>
                             <td v-if="storeM.archivo !=''">
-                                <img :src="'http://ttaudit.com/media/fotos/'+storeM.archivo"  class="rounded mx-auto d-block img-fluid" data-toggle="modal" data-target="#modalImage" @click="loadImageModal(storeM.archivo)">
+                                <img :src="'http://ttaudit.com/media/fotos/'+storeM.archivo"  class="img-fluid img-thumbnail" data-toggle="modal" data-target="#modalImage" @click="loadImageModal(storeM.archivo)" style="width: 80px">
                             </td>
                             <td v-else></td>
                             <td>{{storeM.comentario}}</td>
+                            <td v-if="storeM.audio !=''">
+                                <audio controls="controls" >
+                                    <source :src="'http://ttaudit.com/media/audios/'+storeM.audio"  type="audio/mpeg" />
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </td>
+                            <td v-else></td>
                         </tr>
                         </tbody>
                     </table>
@@ -93,11 +103,14 @@
     import EventBus from '../../bus';
     import Loading from 'vue-loading-overlay';
     import 'vue-loading-overlay/dist/vue-loading.css';
+    import JsonExcel from 'vue-json-excel';
+
     export default {
         name: "BlockDetailsOption",
         props:['company_id'],
         components:{
-            Loading
+            Loading,
+            JsonExcel
         },
         data(){
             return{
@@ -106,6 +119,10 @@
                 storesMedias:[],
                 viewStores:false,
                 isLoading2: false,
+                json_data:[],
+                json_fields:new Object(),
+                json_meta:[],
+                nombExcel:''
             }
         },
         mounted(){
@@ -151,19 +168,48 @@
                     .then((response) => {
                         var valorOtros='';
                         this.isLoading2 = false;
+                        var archivo_foto ='';
+                        var archivo_audio ='';
+                        this.json_data = [];
+                        this.json_fields = new Object();
+                        console.log('getStoreMedia: ',response.data);
 
-                        //console.log(response.data)
                         for (var indice in response.data) {
                             if (type=="sino"){
                                 valorOtros = response.data[indice]['comentario'];
                             }else{
                                 valorOtros = valorOt[response.data[indice]['id']];
                             }
-                            this.storesMedias.push({id: response.data[indice]['id'],fullname: response.data[indice]['fullname'], address: response.data[indice]['address'], archivo: response.data[indice]['archivo'], region: response.data[indice]['region'],district: response.data[indice]['district'], ubigeo: response.data[indice]['ubigeo'], comentario: valorOtros});
+
+                            archivo_foto = "<a href='http://ttaudit.com/media/fotos/'>" + response.data[indice]['archivo'] + "</a>";
+                            archivo_audio = "<a href='http://ttaudit.com/media/audios/'>" + response.data[indice]['audio_web']+"</a>";
+
+                            this.storesMedias.push({id: response.data[indice]['id'],fullname: response.data[indice]['fullname'], address: response.data[indice]['address'], archivo: response.data[indice]['archivo'], region: response.data[indice]['region'],district: response.data[indice]['district'], ubigeo: response.data[indice]['ubigeo'], comentario: valorOtros, created_at: response.data[indice]['created_at'], audio: response.data[indice]['audio_web']});
+                            this.json_data.push({id: response.data[indice]['id'],fullname: response.data[indice]['fullname'], address: response.data[indice]['address'], archivo: archivo_foto, region: response.data[indice]['region'],district: response.data[indice]['district'], ubigeo: response.data[indice]['ubigeo'], comentario: valorOtros, created_at: response.data[indice]['created_at'], audio: archivo_audio});
                         }
+                        //this.json_data = this.storesMedias;
+                        //this.json_fields = new Object();
+                        this.nombExcel = this.company_id + '_' + this.poll_id + '_' + this.opcion.type + '.xls';
+
+                        this.json_fields.Id = "id";
+                        this.json_fields.Nombres = "fullname";
+                        this.json_fields.Direccion = "address";
+                        this.json_fields.Mercado = "region";
+                        this.json_fields.Modulo = "district";
+                        this.json_fields.Oficina = "ubigeo";
+                        this.json_fields.Foto = "archivo";
+                        this.json_fields.Comentario = "comentario";
+                        this.json_fields.Audio = "audio";
+                        //this.json_fields.push('Id':'id','Nombres':'fullname','Mercado':'region','Modulo':'district','Oficina':'ubigeo','foto':'archivo','Comentario':'comentario','Audio':'audio');
+                        this.json_meta = [
+                            {
+                                'key': 'charset',
+                                'value': 'utf-8'
+                            }
+                        ];
                         //this.storesMedias = response.data;
                         this.viewStores = true;
-                        console.log(this.storesMedias);
+                        //console.log('fields:',this.json_fields,' data: ',this.json_data,' meta: ',this.json_meta);
                     })
                     .catch((response) => {
                         this.isLoading2 = false;

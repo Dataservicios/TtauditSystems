@@ -29,6 +29,7 @@
         "font-awesome": "^4.7.0",
         "simple-line-icons": "^2.4.1",
         "vue-chartjs": "^2.8.1",
+        "vue-json-excel": "^0.2.98",
         "vue-loading-overlay": "^3.0.1",
         "vue-router": "^3.0.1",
         "vue-strap": "^1.1.40"

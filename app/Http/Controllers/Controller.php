@@ -74,7 +74,13 @@ class Controller extends BaseController
         {
             $log_process->auditor_id = $objeto->user_id;
         }else{
-            $log_process->auditor_id = $objeto->auditor;
+            if ($type_operation=='errorPhoto')
+            {
+                $log_process->auditor_id = $objeto->user_id;
+            }else{
+                $log_process->auditor_id = $objeto->auditor;
+            }
+
         }
 
         $log_process->publicity_id = $objeto->publicity_id;

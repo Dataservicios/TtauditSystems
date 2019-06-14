@@ -20,5 +20,14 @@ class ExchangeMasterRepo extends Repository
         return new ExchangeMaster;
     }
 
+    /*
+    @final
+    @method array methodName()
+    @author Franco <franco@dataservicios.com>
+    */
+    public function getExchanges()
+    {
+        
+    }
 
 }

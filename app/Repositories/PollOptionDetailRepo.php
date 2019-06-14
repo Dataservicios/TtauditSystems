@@ -24,7 +24,7 @@ class PollOptionDetailRepo extends Repository
     {
         if ($ubigeo == "0")
         {
-            $results = DB::select('select * from `poll_option_details` where `poll_option_id` = ?', [ $poll_option_id]);
+            $results = DB::select('select * from `poll_option_details` where `poll_option_id` = ? group by store_id', [ $poll_option_id]);
         }else{
             $results = DB::select('SELECT *
 FROM
@@ -32,7 +32,7 @@ FROM
   INNER JOIN `stores` ON (`poll_option_details`.`store_id` = `stores`.`id`)
 WHERE
   `poll_option_details`.`poll_option_id` = ? AND 
-  `stores`.`ubigeo` = ? ', [ $poll_option_id,$ubigeo]);
+  `stores`.`ubigeo` = ? group by `poll_option_details`.`store_id`', [ $poll_option_id,$ubigeo]);
         }
 
         return $results;
